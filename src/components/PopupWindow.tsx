@@ -1,23 +1,25 @@
 import React from "react";
 import Button from "./Button";
+import SvgIcon from "./SvgIcon";
 
 type PopupProps = {
 	children?: React.ReactNode | string;
 	active?: boolean;
-	setActive?: Function;
+	setActive?: () => void;
 };
 
-export default function PopupWindow(props: PopupProps) {
+export default function PopupWindow({
+	active,
+	children,
+	setActive,
+}: PopupProps) {
 	return (
-		<div className={props.active ? "popup active" : "popup"}>
+		<div className={active ? "popup active" : "popup"}>
 			<div className="popup_content">
-				{props.children}
-				<Button
-					className={"popup_close"}
-					icon={"cross"}
-					callback={props.setActive}
-					callbackParameter={false}
-				></Button>
+				{children}
+				<Button className={"popup_close"} onClick={setActive}>
+					<SvgIcon icon={"cross"} />
+				</Button>
 			</div>
 		</div>
 	);

@@ -1,29 +1,31 @@
-import React from "react";
-import receiveTableButtons from "../../utils/receiveTableButtons";
+import React, {
+	JSXElementConstructor,
+	ReactElement,
+	ReactFragment,
+} from "react";
+import keyGenerator from "../../utils/keyGenerator";
 import TableRowItem from "./TableRowItem";
 
 type TableRowProps = {
 	className?: string;
 	rowContent: Array<string>;
-	buttons?: string[];
+	buttons?:
+		| string
+		| number
+		| true
+		| ReactElement<any, string | JSXElementConstructor<any>>
+		| ReactFragment;
 };
 
 export default function TableRow(props: TableRowProps) {
-	let propsClasses: string = "";
-	if (props.className) {
-		propsClasses = props.className;
-	}
-	let buttonsArray: React.ReactNode[] | undefined;
-	if (props.buttons) {
-		buttonsArray = receiveTableButtons(props.buttons);
-	}
+	const { rowContent, buttons, className } = props;
 
 	return (
-		<div className={"table_row" + " " + propsClasses}>
-			{props.rowContent.map((el) => (
-				<TableRowItem content={el} key={el} />
+		<div className={`table_row ${className ? className : ""}`}>
+			{rowContent.map((el) => (
+				<TableRowItem content={el} key={keyGenerator()} />
 			))}
-			<TableRowItem content={buttonsArray} />
+			<TableRowItem content={buttons} />
 		</div>
 	);
 }

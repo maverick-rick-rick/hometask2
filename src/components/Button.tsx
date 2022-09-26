@@ -1,38 +1,18 @@
-import React from "react";
-import Icon_SVG from "./Icon_SVG";
+import React, { ButtonHTMLAttributes } from "react";
+import SvgIcon from "./SvgIcon";
 
 type ButtonProps = {
 	children?: React.ReactNode | string;
-	className?: string | object;
 	icon?: string;
-	callback?: Function;
-	callbackParameter?: boolean;
-};
+} & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export default function Button(props: ButtonProps) {
-	let icon: React.ReactNode;
-	let resultContent: React.ReactNode[] = [];
-
-	function iconElement(str: string): React.ReactNode {
-		return <Icon_SVG icon={str} />;
-	}
-
-	if (props.icon) {
-		icon = iconElement(props.icon);
-	}
-	let callBack: Function;
-	if (props.callback) {
-		callBack = props.callback;
-	}
-
-	resultContent.push(icon, props.children);
+	const { className, id, children, icon, ...buttonProps } = props;
 
 	return (
-		<button
-			className={"btn" + " " + props.className}
-			onClick={() => callBack(props.callbackParameter)}
-		>
-			{resultContent}
+		<button className={`btn ${className}`} id={id} {...buttonProps}>
+			{icon && <SvgIcon icon={icon}></SvgIcon>}
+			{children}
 		</button>
 	);
 }

@@ -7,7 +7,7 @@ type SectionProps = {
 
 export default function Section(props: SectionProps) {
 	return (
-		<section {...props} className={"section" + " " + props.className}>
+		<section {...props} className={`section ${props.className}`}>
 			<div className="container">{props.children}</div>
 		</section>
 	);

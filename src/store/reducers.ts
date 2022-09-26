@@ -13,7 +13,7 @@ let defaultState = {
 			name: "Climb a tree",
 			created: "September 22, 2022",
 			category: "Random thought",
-			content: "My neighbour have a bonsai tree...",
+			content: "My neighbor have a bonsai tree...",
 			deadlines: "Start: 12.03.2022 \n End: 12.10.2022",
 		},
 		{
@@ -64,7 +64,7 @@ let defaultState = {
 			name: "Climb a tree",
 			created: "September 22, 2022",
 			category: "Random thought",
-			content: "My neighbour have a bonsai tree...",
+			content: "My neighbor have a bonsai tree...",
 			deadlines: "Start: 22.05.2022\nEnd: 13.10.2022",
 		},
 		{
