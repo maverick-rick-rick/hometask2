@@ -6,9 +6,14 @@ import React, {
 import keyGenerator from "../../utils/keyGenerator";
 import TableRowItem from "./TableRowItem";
 
+type StateItemType = {
+	[key: string]: string;
+};
+
 type TableRowProps = {
 	className?: string;
-	rowContent: Array<string>;
+	id?: number;
+	rowContent: StateItemType | string[];
 	buttons?:
 		| string
 		| number
@@ -17,12 +22,16 @@ type TableRowProps = {
 		| ReactFragment;
 };
 
+
+
+
 export default function TableRow(props: TableRowProps) {
 	const { rowContent, buttons, className } = props;
-
+    const rowData = Object.values(rowContent);
+    
 	return (
 		<div className={`table_row ${className ? className : ""}`}>
-			{rowContent.map((el) => (
+			{rowData.map(el => (
 				<TableRowItem content={el} key={keyGenerator()} />
 			))}
 			<TableRowItem content={buttons} />

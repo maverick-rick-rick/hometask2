@@ -1,6 +1,9 @@
-import React, { MouseEventHandler, useMemo } from "react";
+import React, {
+	MouseEventHandler,
+	useMemo,
+} from "react";
+import { useDispatch } from "react-redux";
 import keyGenerator from "../../utils/keyGenerator";
-import { valuesFromObject } from "../../utils/valuesFromObject";
 import Button from "../Button";
 import TableRow from "./TableRow";
 
@@ -9,6 +12,15 @@ type TableProps = {
 	tableContent: [];
 	buttons?: boolean;
 	popupToggle?: MouseEventHandler<HTMLButtonElement>;
+	popupWithUpdateForm? : (el:any) => void;
+};
+
+type StateItemType = {
+	[key: string]: string;
+};
+type StateType = {
+	id: number;
+	content: StateItemType;
 };
 
 const tableHeaders: { [key: string]: string[] } = {
@@ -17,41 +29,71 @@ const tableHeaders: { [key: string]: string[] } = {
 };
 
 export default function Table(props: TableProps) {
+	const { tableContent, tableType, popupWithUpdateForm } = props;
+
+	const tableData: StateType[] = tableContent;
+
 	// define header of table
 
-	const tableHeaderContent = useMemo(() => {
-		if (props.tableType === "notesTable") {
+	const tableHeaderContent = () => {
+		if (tableType === "Visible" || tableType === "Archived") {
 			return tableHeaders.notesHeader;
 		}
-		if (props.tableType === "archiveTable") {
-			return tableHeaders.notesHeader;
-		}
-		if (props.tableType === "summaryTable") {
+		if (tableType === "summaryTable") {
 			return tableHeaders.summaryHeader;
 		}
-		return [];
-	}, [props.tableType]);
+		else return [];
+	};
 
-	const tableContent = valuesFromObject(props.tableContent);
+	const dispatch = useDispatch();
 
-	const actions = (el: any) => {
+	const defineStoreElement = (type: any) => {
+		switch (type) {
+			case "Visible":
+				return "visibleNotes";
+			case "Archived":
+				return "archivedNotes";
+			default:
+				return "";
+		}
+	};
+
+	const deleteNote = (el: any, type: string | undefined) => {
+		dispatch({
+			type: "DELETE_NOTE",
+			payload: { id: el.id, value: defineStoreElement(type) },
+		});
+	};
+
+	const changeNoteDestination = (el: any, type: string | undefined) => {
+		dispatch({
+			type: "CHANGE_DESTINATION",
+			payload: { id: el.id, value: defineStoreElement(type) },
+		});
+	};
+
+	const updateNote = popupWithUpdateForm ? popupWithUpdateForm : () => {return false}
+
+	
+
+	const buttons = (el: any) => {
 		return [
 			<Button
 				className={"btn-edit"}
 				icon={"pencil"}
-				onClick={() => console.log(el)}
+				onClick={() => updateNote(el)}
 				key={keyGenerator()}
 			/>,
 			<Button
 				className={"btn-archive"}
 				icon={"archive"}
-				onClick={() => console.log(el)}
+				onClick={() => changeNoteDestination(el, tableType)}
 				key={keyGenerator()}
 			/>,
 			<Button
 				className={"btn-delete"}
 				icon={"trash"}
-				onClick={() => console.log(el)}
+				onClick={() => deleteNote(el, tableType)}
 				key={keyGenerator()}
 			/>,
 		];
@@ -61,24 +103,13 @@ export default function Table(props: TableProps) {
 		<div className="table">
 			<TableRow
 				className={"table_headline"}
-				rowContent={tableHeaderContent}
-				buttons={
-					props.tableType === "notesTable"
-						? [
-								<Button
-									className={"btn"}
-									icon={"pencil"}
-									onClick={props.popupToggle}
-									key={keyGenerator()}
-								/>,
-						  ]
-						: ""
-				}
+				rowContent={tableHeaderContent()}
+				
 			/>
-			{tableContent.map((el) => (
+			{tableData.map((el) => (
 				<TableRow
-					rowContent={el}
-					buttons={props.buttons ? actions(el) : ""}
+					rowContent={el.content}
+					buttons={props.buttons ? buttons(el) : ""}
 					key={keyGenerator()}
 				/>
 			))}
