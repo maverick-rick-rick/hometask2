@@ -12,7 +12,7 @@ type TableProps = {
 	tableContent: [];
 	buttons?: boolean;
 	popupToggle?: MouseEventHandler<HTMLButtonElement>;
-	popupWithUpdateForm? : (el:any) => void;
+	popupWithUpdateForm : (el:any) => void;
 };
 
 type StateItemType = {
@@ -72,7 +72,9 @@ export default function Table(props: TableProps) {
 		});
 	};
 
-	const updateNote = popupWithUpdateForm ? popupWithUpdateForm : () => {return false}
+	const updateNote = (el:any) => {
+	popupWithUpdateForm(el)
+	}
 
 	
 

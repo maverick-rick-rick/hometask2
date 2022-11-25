@@ -1,6 +1,6 @@
 import keyGenerator from "../utils/keyGenerator";
 
-let defaultState = {
+const defaultState = {
 	visibleNotes: [
 		{
 			id: 0,
@@ -121,6 +121,7 @@ type StoreElementType = {
 	id: number;
 	content: { [key: string]: string };
 }[];
+
 type StoreItemType = {
 	id: number;
 	content: { [key: string]: string };
@@ -145,24 +146,18 @@ export const notesReducer = (
 	state = defaultState,
 	action: { type: string; payload: PayloadType }
 ) => {
-	const defineTargetedStateElement = (
-		val: string | number | StoreItemType | undefined,
-		reverse?: boolean
-	) => {
+	const defineTargetedStateElement = (val: string | undefined) : StoreElementType[] => {
 		switch (val) {
-			case "visibleNotes":
-				if (reverse) {
-					return defaultState.archivedNotes;
-				}
-				return defaultState.visibleNotes;
-			case "archivedNotes":
-				if (reverse) {
-					return defaultState.visibleNotes;
-				}
-				return defaultState.archivedNotes;
-			default:
-				return defaultState.visibleNotes;
+			case 'visibleNotes':
+			case 'Visible':
+				return [defaultState.visibleNotes, defaultState.archivedNotes]
+			case 'archivedNotes':
+			case 'Archived':
+				return [defaultState.archivedNotes, defaultState.visibleNotes]
+			default: return [defaultState.visibleNotes, defaultState.archivedNotes]
+
 		}
+		
 	};
 	const getIndex = (target: StoreElementType) => {
 		const element: any = target.find(
@@ -172,48 +167,46 @@ export const notesReducer = (
 	};
 
 	switch (action.type) {
-		case "DELETE_NOTE": {
-			const target = defineTargetedStateElement(action.payload.value);
-			return { ...state, target: target.splice(getIndex(target), 1) };
+		case "ADD_NOTE": {
+			const target = state.visibleNotes;
+			const element = Object.assign({}, action.payload.item);			
+			return { ...state, target: target.push(element) };
 		}
-
+		case "DELETE_NOTE": {
+			const targets = defineTargetedStateElement(action.payload.value);
+			return { ...state, target: targets[0].splice(getIndex(targets[0]), 1) };
+		}
 		case "CHANGE_DESTINATION": {
-			const target = defineTargetedStateElement(action.payload.value);
-			const targetReverse = defineTargetedStateElement(
-				action.payload.value,
-				true
-			);
+			console.log(action.payload);
+			
+			const targets = defineTargetedStateElement(action.payload.value);
 			const thisElement = () => {
 				const thisElement = Object.assign(
 					{},
-					target.slice(getIndex(target), getIndex(target) + 1)[0]
+					targets[0].slice(getIndex(targets[0]), getIndex(targets[0]) + 1)[0]
 				);
 				thisElement.id = parseInt(keyGenerator(), 10);
 
 				return thisElement;
 			};
-
 			return {
 				...state,
-				targetReverse: targetReverse.push(thisElement()),
-				target: target.splice(getIndex(target), 1),
+				targetReverse: targets[1].push(thisElement()),
+				target: targets[0].splice(getIndex(targets[0]), 1),
 			};
 		}
-		case "ADD_NOTE": {
-			const target = state.visibleNotes;
-
-			const element = Object.assign({}, action.payload.item);
-
-			return { ...state, target: target.push(element) };
-		}
 		case "UPDATE_NOTE": {
-			const target = defaultState.visibleNotes;
-			// console.log(defaultState.visibleNotes[x]);
-			// const payloadElement = action.payload
+			const targets = defineTargetedStateElement(action.payload.value);
+			console.log(action.payload.value);
+			
+			console.log(targets);
+			
+			const target = targets[0];
+			const element = action.payload.item;
+			
+			
 
-			console.log(action.payload);
-
-			return state;
+			return {...state, target : target.splice(getIndex(target), 1, element !== undefined ? element : target[0])};
 		}
 		default:
 			return state;

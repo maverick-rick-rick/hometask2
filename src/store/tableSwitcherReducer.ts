@@ -6,7 +6,6 @@ export const tableSwitcherReducer = (
 ) => {
 	switch (action.type) {
 		case "SWITCH_TABLE": 
-		console.log(state);
 			return state = action.payload;
 		default:
 			return state;

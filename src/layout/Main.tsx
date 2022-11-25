@@ -31,6 +31,7 @@ export default function Main() {
 	const popupForm = () => {
 		return (
 			<NoteForm
+				tableType={currentNotesTable}
 				payload={{
 					id: undefined,
 					content: {
@@ -47,6 +48,7 @@ export default function Main() {
 	const popupWithUpdateForm = (el: any) => {
 		setPopupContent(
 			<NoteForm
+				tableType={currentNotesTable}
 				payload={{
 					id: el.id,
 					content: {

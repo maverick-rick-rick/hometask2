@@ -16,6 +16,7 @@ type PayloadType = {
 };
 type StoreItemType = {
 	formAction: string;
+	tableType : any;
 	payload: {
 		id: number | undefined;
 		content: PayloadType;
@@ -23,7 +24,7 @@ type StoreItemType = {
 };
 
 export default function NoteForm(props: StoreItemType) {
-	const { formAction, payload } = props;
+	const { formAction, payload, tableType } = props;
 
 	const dispatch = useDispatch();
 
@@ -54,7 +55,7 @@ export default function NoteForm(props: StoreItemType) {
 	];
 
 	const newNoteElement = {
-		id: payload.id ? payload.id : parseInt(keyGenerator()),
+		id: payload.id !== undefined ? payload.id : parseInt(keyGenerator()),
 		content: {
 			name: "",
 			created: "",
@@ -106,6 +107,7 @@ export default function NoteForm(props: StoreItemType) {
 
 		return result;
 	}
+	
 	const compileObject = () => {
 		newNoteElement.content.name = formState.noteName;
 		newNoteElement.content.created = getCurrentDate();
@@ -116,25 +118,26 @@ export default function NoteForm(props: StoreItemType) {
 	};
 
 	const submit = (e: FormEvent<HTMLFormElement>) => {
+		
+		
 		e.preventDefault();
 		const result = compileObject();
 		switch (formAction) {
 			case "create":
 				dispatch({
 					type: "ADD_NOTE",
-					payload: { item: result },
+					payload: { item: {...result} },
 				});
 				break;
 			case "update":
 				dispatch({
 					type: "UPDATE_NOTE",
-					payload: { item: result },
+					payload: { id: result.id, item: {...result}, value: tableType },
 				});
 				break;
 			default:
 				break;
 		}
-		console.log();
 		
 		setFormState({ noteName: "", noteCategory: "", noteContent: "" });
 
