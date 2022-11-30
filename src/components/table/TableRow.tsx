@@ -17,6 +17,7 @@ type TableRowProps = {
 	buttons?:
 		| string
 		| number
+		| boolean
 		| true
 		| ReactElement<any, string | JSXElementConstructor<any>>
 		| ReactFragment;
@@ -28,13 +29,15 @@ type TableRowProps = {
 export default function TableRow(props: TableRowProps) {
 	const { rowContent, buttons, className } = props;
     const rowData = Object.values(rowContent);
-    
+	console.log(rowData);
+	
+
 	return (
 		<div className={`table_row ${className ? className : ""}`}>
 			{rowData.map(el => (
 				<TableRowItem content={el} key={keyGenerator()} />
 			))}
-			<TableRowItem content={buttons} />
+			{buttons ? <TableRowItem content={buttons} /> : null}
 		</div>
 	);
 }

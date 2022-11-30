@@ -10,6 +10,9 @@ import Section from "./Section";
 export default function Main() {
 	const tableContent = useSelector((state: any) => state.notesReducer);
 	const currentNotesTable = useSelector((state: any)=> state.tableSwitcherReducer);
+	const statsTable = useSelector((state: any)=> state.statsReducer);
+	
+
 
 	const returnTableContent = () => {
 		switch (currentNotesTable) {
@@ -70,9 +73,7 @@ export default function Main() {
 		setPopupContent(popupForm);
 		popupToggle();
 	};
-
 	
-
 	return (
 		<main className="main">
 			<Section className={"note_list"}>
@@ -87,12 +88,14 @@ export default function Main() {
 					create new note
 				</Button>
 			</Section>
-			{/* <Section className={"note_summary"}>
+			<Section className={"note_summary"}>
 				<Table
 					tableType={"summaryTable"}
-					tableContent={}
+					tableContent={statsTable.state}
+					buttons={false}
+					popupWithUpdateForm={popupWithUpdateForm}
 				/>
-			</Section> */}
+			</Section>
 			<PopupWindow active={modalActive} setActive={popupToggle}>
 				{popupContent}
 			</PopupWindow>

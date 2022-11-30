@@ -1,7 +1,4 @@
-import React, {
-	MouseEventHandler,
-	useMemo,
-} from "react";
+import React, {	MouseEventHandler } from "react";
 import { useDispatch } from "react-redux";
 import keyGenerator from "../../utils/keyGenerator";
 import Button from "../Button";
@@ -30,7 +27,7 @@ const tableHeaders: { [key: string]: string[] } = {
 
 export default function Table(props: TableProps) {
 	const { tableContent, tableType, popupWithUpdateForm } = props;
-
+	
 	const tableData: StateType[] = tableContent;
 
 	// define header of table
@@ -76,8 +73,6 @@ export default function Table(props: TableProps) {
 	popupWithUpdateForm(el)
 	}
 
-	
-
 	const buttons = (el: any) => {
 		return [
 			<Button
@@ -111,7 +106,7 @@ export default function Table(props: TableProps) {
 			{tableData.map((el) => (
 				<TableRow
 					rowContent={el.content}
-					buttons={props.buttons ? buttons(el) : ""}
+					buttons={props.buttons ? buttons(el) : false}
 					key={keyGenerator()}
 				/>
 			))}

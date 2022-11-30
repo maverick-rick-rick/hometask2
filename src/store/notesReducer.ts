@@ -1,6 +1,6 @@
 import keyGenerator from "../utils/keyGenerator";
 
-const defaultState = {
+export const defaultState = {
 	visibleNotes: [
 		{
 			id: 0,
@@ -177,8 +177,6 @@ export const notesReducer = (
 			return { ...state, target: targets[0].splice(getIndex(targets[0]), 1) };
 		}
 		case "CHANGE_DESTINATION": {
-			console.log(action.payload);
-			
 			const targets = defineTargetedStateElement(action.payload.value);
 			const thisElement = () => {
 				const thisElement = Object.assign(
@@ -197,10 +195,6 @@ export const notesReducer = (
 		}
 		case "UPDATE_NOTE": {
 			const targets = defineTargetedStateElement(action.payload.value);
-			console.log(action.payload.value);
-			
-			console.log(targets);
-			
 			const target = targets[0];
 			const element = action.payload.item;
 			

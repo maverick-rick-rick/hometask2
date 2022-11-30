@@ -51,7 +51,7 @@ export default function NoteForm(props: StoreItemType) {
 		"Task",
 		"Random thought",
 		"Idea",
-		"Quote",
+		"Quote"
 	];
 
 	const newNoteElement = {
