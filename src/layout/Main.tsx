@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import Button from "../components/Button";
 import NoteForm from "../components/NoteForm";
@@ -9,26 +10,26 @@ import Section from "./Section";
 
 export default function Main() {
 	const tableContent = useSelector((state: any) => state.notesReducer);
-	const currentNotesTable = useSelector((state: any)=> state.tableSwitcherReducer);
-	const statsTable = useSelector((state: any)=> state.statsReducer);
-	
+	const currentNotesTable = useSelector(
+		(state: any) => state.tableSwitcherReducer
+	);
+	const statsTable = useSelector((state: any) => state.statsReducer);
 
+	const dispatch = useDispatch();
+
+	function toggleModal() {
+		dispatch({ type: "TOGGLE_MODAL" });
+	}
 
 	const returnTableContent = () => {
 		switch (currentNotesTable) {
-			case 'Visible':
+			case "Visible":
 				return tableContent.visibleNotes;
-			case 'Archived':
+			case "Archived":
 				return tableContent.archivedNotes;
 			default:
 				return false;
 		}
-	};
-
-	const [modalActive, setModalActive] = useState(false);
-
-	const popupToggle = () => {
-		setModalActive(!modalActive);
 	};
 
 	const popupForm = () => {
@@ -63,17 +64,16 @@ export default function Main() {
 				formAction={"update"}
 			/>
 		);
-		popupToggle();
+		toggleModal();
 	};
 
 	const [popupContent, setPopupContent] = useState(popupForm);
 
-
 	const popupWithForm = () => {
 		setPopupContent(popupForm);
-		popupToggle();
+		toggleModal();
 	};
-	
+
 	return (
 		<main className="main">
 			<Section className={"note_list"}>
@@ -91,14 +91,12 @@ export default function Main() {
 			<Section className={"note_summary"}>
 				<Table
 					tableType={"summaryTable"}
-					tableContent={statsTable.state}
+					tableContent={statsTable}
 					buttons={false}
 					popupWithUpdateForm={popupWithUpdateForm}
 				/>
 			</Section>
-			<PopupWindow active={modalActive} setActive={popupToggle}>
-				{popupContent}
-			</PopupWindow>
+			<PopupWindow>{popupContent}</PopupWindow>
 		</main>
 	);
 }

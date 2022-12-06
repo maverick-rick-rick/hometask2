@@ -1,11 +1,4 @@
-import React, {
-
-	FormEvent,
-
-	useEffect,
-
-	useState,
-} from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import keyGenerator from "../utils/keyGenerator";
 
@@ -16,7 +9,7 @@ type PayloadType = {
 };
 type StoreItemType = {
 	formAction: string;
-	tableType : any;
+	tableType: any;
 	payload: {
 		id: number | undefined;
 		content: PayloadType;
@@ -27,6 +20,10 @@ export default function NoteForm(props: StoreItemType) {
 	const { formAction, payload, tableType } = props;
 
 	const dispatch = useDispatch();
+
+	function toggleModal() {
+		dispatch({ type: "TOGGLE_MODAL" });
+	}
 
 	const [formState, setFormState] = useState<PayloadType>({
 		noteName: "",
@@ -51,7 +48,7 @@ export default function NoteForm(props: StoreItemType) {
 		"Task",
 		"Random thought",
 		"Idea",
-		"Quote"
+		"Quote",
 	];
 
 	const newNoteElement = {
@@ -77,7 +74,7 @@ export default function NoteForm(props: StoreItemType) {
 		return string;
 	}
 
-	function processDateField(): string  {
+	function processDateField(): string {
 		const string = formState.noteContent;
 		const regexp = /(\d{1,4}([./-])\d{1,2}([./-])\d{1,4})/g;
 		const tempArray = string.match(regexp);
@@ -85,7 +82,7 @@ export default function NoteForm(props: StoreItemType) {
 			return "";
 		}
 		if (tempArray.length === 0 || tempArray === null) {
-			return  '';
+			return "";
 		}
 		if (tempArray.length > 2) {
 			tempArray.splice(1, tempArray.length - 2);
@@ -107,7 +104,7 @@ export default function NoteForm(props: StoreItemType) {
 
 		return result;
 	}
-	
+
 	const compileObject = () => {
 		newNoteElement.content.name = formState.noteName;
 		newNoteElement.content.created = getCurrentDate();
@@ -118,34 +115,37 @@ export default function NoteForm(props: StoreItemType) {
 	};
 
 	const submit = (e: FormEvent<HTMLFormElement>) => {
-		
-		
 		e.preventDefault();
 		const result = compileObject();
 		switch (formAction) {
 			case "create":
 				dispatch({
 					type: "ADD_NOTE",
-					payload: { item: {...result} },
+					payload: { item: { ...result } },
 				});
 				break;
 			case "update":
 				dispatch({
 					type: "UPDATE_NOTE",
-					payload: { id: result.id, item: {...result}, value: tableType },
+					payload: {
+						id: result.id,
+						item: { ...result },
+						value: tableType,
+					},
 				});
 				break;
 			default:
 				break;
 		}
-		
+
 		setFormState({ noteName: "", noteCategory: "", noteContent: "" });
 
 		const successLabel = document.querySelector(".attention");
 		successLabel?.classList.remove("hidden");
 		setTimeout(() => {
 			successLabel?.classList.add("hidden");
-		}, 2250);
+			toggleModal();
+		}, 1250);
 	};
 
 	return (
@@ -153,8 +153,7 @@ export default function NoteForm(props: StoreItemType) {
 			id={"create_note_form"}
 			action={"#"}
 			className={"create_note"}
-			onSubmit={(e) => submit(e)}
-		>
+			onSubmit={(e) => submit(e)}>
 			<label htmlFor={"create_note_name"}>Enter your note name</label>
 			<input
 				type={"text"}
@@ -178,8 +177,7 @@ export default function NoteForm(props: StoreItemType) {
 						...formState,
 						noteCategory: e.target.value,
 					})
-				}
-			>
+				}>
 				{noteCategories.map((el) => {
 					return (
 						<option value={el} key={keyGenerator()}>
@@ -213,11 +211,7 @@ export default function NoteForm(props: StoreItemType) {
 				placeholder={""}
 				value={"Create a note"}
 			/>
-			{
-				<div className={"attention hidden"}>
-					Success ! <br /> Close the popup or continue...
-				</div>
-			}
+			{<div className={"attention hidden"}>Success !</div>}
 		</form>
 	);
 }

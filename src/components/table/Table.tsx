@@ -1,4 +1,4 @@
-import React, {	MouseEventHandler } from "react";
+import React, { MouseEventHandler } from "react";
 import { useDispatch } from "react-redux";
 import keyGenerator from "../../utils/keyGenerator";
 import Button from "../Button";
@@ -9,7 +9,7 @@ type TableProps = {
 	tableContent: [];
 	buttons?: boolean;
 	popupToggle?: MouseEventHandler<HTMLButtonElement>;
-	popupWithUpdateForm : (el:any) => void;
+	popupWithUpdateForm: (el: any) => void;
 };
 
 type StateItemType = {
@@ -27,7 +27,7 @@ const tableHeaders: { [key: string]: string[] } = {
 
 export default function Table(props: TableProps) {
 	const { tableContent, tableType, popupWithUpdateForm } = props;
-	
+
 	const tableData: StateType[] = tableContent;
 
 	// define header of table
@@ -38,8 +38,7 @@ export default function Table(props: TableProps) {
 		}
 		if (tableType === "summaryTable") {
 			return tableHeaders.summaryHeader;
-		}
-		else return [];
+		} else return [];
 	};
 
 	const dispatch = useDispatch();
@@ -69,9 +68,9 @@ export default function Table(props: TableProps) {
 		});
 	};
 
-	const updateNote = (el:any) => {
-	popupWithUpdateForm(el)
-	}
+	const updateNote = (el: any) => {
+		popupWithUpdateForm(el);
+	};
 
 	const buttons = (el: any) => {
 		return [
@@ -101,13 +100,14 @@ export default function Table(props: TableProps) {
 			<TableRow
 				className={"table_headline"}
 				rowContent={tableHeaderContent()}
-				
+				categoryIcon={false}
 			/>
 			{tableData.map((el) => (
 				<TableRow
 					rowContent={el.content}
 					buttons={props.buttons ? buttons(el) : false}
 					key={keyGenerator()}
+					categoryIcon={true}
 				/>
 			))}
 		</div>
