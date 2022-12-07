@@ -2,7 +2,7 @@ import { defaultState } from "./notesReducer";
 
 export const statsState = [];
 
-export const statsReducer = (state = statsState, action: { type: string }) => {
+export const statsReducer = (state:any = statsState, action: { type: string }) => {
 	let dataList: string[][] = [];
 	for (const [key, value] of Object.entries(defaultState)) {
 		const tempArray: string[] = [];
@@ -38,6 +38,6 @@ export const statsReducer = (state = statsState, action: { type: string }) => {
 	switch (action.type) {
 		case "CALCULATE_STATS":
 		default:
-			return [...state, ...calculatedState];
+			return state = [...calculatedState];
 	}
 };
